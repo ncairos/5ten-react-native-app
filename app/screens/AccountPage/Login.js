@@ -4,6 +4,7 @@ import { Divider } from "react-native-elements";
 // si por alguna razon el log viene un objeto vacio usamos el withNavigation como hemos hecho en account.js
 import { withNavigation } from "react-navigation";
 import LoginForm from "../../components/LoginForm";
+import FacebookLogin from "../../components/FacebookLogin";
 import Toast from "react-native-easy-toast";
 
 export default function Login(props) {
@@ -23,7 +24,7 @@ export default function Login(props) {
       </View>
       <Divider style={styles.divider} />
       <View style={styles.viewCont}>
-        <Text>FACEBOOK LOGIN</Text>
+        <FacebookLogin toastRef={toastRef} navigation={navigation} />
       </View>
       <Toast ref={toastRef} position="center" opacity={0.5} />
     </ScrollView>

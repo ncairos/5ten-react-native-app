@@ -3,9 +3,11 @@ import { StyleSheet, View, Text } from "react-native";
 import { Input, Icon, Button } from "react-native-elements";
 import { validateEmail } from "../utils/Validation";
 import Loading from "../components/Loading";
+import * as firebase from "firebase";
+import { withNavigation } from "react-navigation";
 
-export default function LoginForm(props) {
-  const { toastRef } = props;
+function LoginForm(props) {
+  const { toastRef, navigation } = props;
   const [hidePassword, setHidePassword] = useState(true);
 
   const [LoadingIsVisible, setLoadingIsVisible] = useState(false);
@@ -22,7 +24,15 @@ export default function LoginForm(props) {
       if (!validateEmail(email)) {
         toastRef.current.show("The email is not correct");
       } else {
-        console.log("Login Correct");
+        await firebase
+          .auth()
+          .signInWithEmailAndPassword(email, password)
+          .then(() => {
+            navigation.navigate("Account");
+          })
+          .catch(() => {
+            toastRef.current.show("Email or password incorrect");
+          });
       }
     }
     setLoadingIsVisible(false);
@@ -67,6 +77,8 @@ export default function LoginForm(props) {
     </View>
   );
 }
+
+export default withNavigation(LoginForm);
 
 const styles = StyleSheet.create({
   formCont: {
