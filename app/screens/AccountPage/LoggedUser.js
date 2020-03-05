@@ -40,7 +40,7 @@ export default function LoggedUser() {
         titleStyle={styles.btnCloseText}
         onPress={() => firebase.auth().signOut()}
       />
-      <Toast ref={toastRef} position="center" opacity="0.5" />
+      <Toast ref={toastRef} position="center" opacity={0.5} />
       <Loading text={textLoading} isVisible={isLoading} />
     </View>
   );
