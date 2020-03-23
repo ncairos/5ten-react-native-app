@@ -3,8 +3,8 @@ import { StyleSheet, View, Text, ScrollView, Image } from "react-native";
 import { Divider } from "react-native-elements";
 // si por alguna razon el log viene un objeto vacio usamos el withNavigation como hemos hecho en account.js
 import { withNavigation } from "react-navigation";
-import LoginForm from "../../components/LoginForm";
-import FacebookLogin from "../../components/FacebookLogin";
+import LoginForm from "../../components/Account/LoginForm";
+import FacebookLogin from "../../components/Account/FacebookLogin";
 import Toast from "react-native-easy-toast";
 
 export default function Login(props) {

@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-elements";
 import * as firebase from "firebase";
-import InfoUser from "../../components/InfoUser";
+import InfoUser from "../../components/Account/InfoUser";
 import Toast from "react-native-easy-toast";
 import Loading from "../../components/Loading";
-import AccountOptions from "../../components/AccountOptions";
+import AccountOptions from "../../components/Account/AccountOptions";
 
 export default function LoggedUser() {
   const [userInfo, setUserInfo] = useState({});
@@ -33,7 +33,11 @@ export default function LoggedUser() {
         setIsLoading={setIsLoading}
         setTextLoading={setTextLoading}
       />
-      <AccountOptions userInfo={userInfo} setReloadData={setReloadData} toastRef={toastRef} />
+      <AccountOptions
+        userInfo={userInfo}
+        setReloadData={setReloadData}
+        toastRef={toastRef}
+      />
       <Button
         title="Logout"
         buttonStyle={styles.btnClose}

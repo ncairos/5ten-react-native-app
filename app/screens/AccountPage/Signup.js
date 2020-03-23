@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import SignupForm from "../../components/SignupForm";
+import SignupForm from "../../components/Account/SignupForm";
 import Toast from "react-native-easy-toast";
 
 export default function Signup() {
