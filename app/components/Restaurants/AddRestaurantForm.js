@@ -7,17 +7,96 @@ import * as Location from "expo-location";
 import MapView from "react-native-maps";
 import Modal from "../Modal";
 
+import { firebaseApp } from "../../utils/Firebase";
+import firebase from "firebase/app";
+import "firebase/firestore";
+const db = firebase.firestore(firebaseApp);
+
 const WidthScreen = Dimensions.get("window").width;
 
 export default function AddRestaurantForm(props) {
   //console.log(props) me trae un objeto vacio es x eso que en AddRestaurant.js tengo que mandarle props mediante el componente AddRestaurantForm
-  const { toastRef, setIsLoading, navigation } = props;
+  const { toastRef, setIsLoading, navigation, setIsReloadRest } = props;
   const [imageSelected, setImageSelected] = useState([]);
   const [restName, setRestName] = useState("");
   const [restAddress, setRestAddress] = useState("");
   const [restDescription, setRestDescription] = useState("");
   const [isVisibleMap, setIsVisibleMap] = useState(false);
   const [restLocation, setRestLocation] = useState(null);
+
+  const restAdd = () => {
+    if (!restName || !restAddress || !restDescription) {
+      toastRef.current.show("You need to fill everything");
+    } else if (imageSelected.length === 0) {
+      toastRef.current.show("You need to have at least one picture");
+    } else if (!restLocation) {
+      toastRef.current.show("You need to have a location on the map");
+    } else {
+      setIsLoading(true);
+      uploadImgStorage(imageSelected).then(arrayImages => {
+        db.collection("restaurants")
+          .add({
+            name: restName,
+            address: restAddress,
+            description: restDescription,
+            location: restLocation,
+            images: arrayImages,
+            rating: 0,
+            ratingTotal: 0,
+            voteQuantity: 0,
+            createAt: new Date(),
+            createBy: firebaseApp.auth().currentUser.uid
+          })
+          .then(() => {
+            setIsLoading(false);
+            setIsReloadRest(true );
+            navigation.navigate("Restaurants");
+          })
+          .catch(() => {
+            setIsLoading(false);
+            toastRef.current.show(
+              "There was an error uploading the restaurant"
+            );
+          });
+      });
+    }
+  };
+
+  //esto es un UUID generator porque no funciona el paquete
+  function uuidGenerator() {
+    var dt = new Date().getTime();
+    var uuid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(
+      c
+    ) {
+      var r = (dt + Math.random() * 16) % 16 | 0;
+      dt = Math.floor(dt / 16);
+      return (c == "x" ? r : (r & 0x3) | 0x8).toString(16);
+    });
+    return uuid;
+  }
+
+  const uploadImgStorage = async imageArray => {
+    const imgBlob = [];
+    await Promise.all(
+      imageArray.map(async image => {
+        const response = await fetch(image);
+        const blob = await response.blob();
+        const ref = firebase
+          .storage()
+          .ref("restaurant-img")
+          .child(uuidGenerator());
+        await ref
+          .put(blob)
+          .then(result => {
+            imgBlob.push(result.metadata.name);
+          })
+          .catch(() => {
+            toastRef.current.show("There was an error uploading the file");
+          });
+      })
+    );
+    return imgBlob;
+  };
 
   return (
     <ScrollView>
@@ -33,6 +112,11 @@ export default function AddRestaurantForm(props) {
         imageSelected={imageSelected}
         setImageSelected={setImageSelected}
         toastRef={toastRef}
+      />
+      <Button
+        title="Add Restaurant"
+        onPress={restAdd}
+        buttonStyle={styles.restAddBtn}
       />
       <Map
         isVisibleMap={isVisibleMap}
@@ -195,6 +279,12 @@ function Map(props) {
     })();
   }, []);
 
+  const confirmLocation = () => {
+    setRestLocation(location);
+    toastRef.current.show("Restaurant Location saved correctly");
+    setIsVisibleMap(false);
+  };
+
   return (
     <Modal isVisible={isVisibleMap} setIsVisible={setIsVisibleMap}>
       <View>
@@ -217,7 +307,7 @@ function Map(props) {
         <View style={styles.viewMapBtn}>
           <Button
             title="Save Location"
-            onPress={() => console.log("Location is Saved")}
+            onPress={confirmLocation}
             containerStyle={styles.contViewMapBtnSave}
             buttonStyle={styles.viewMapBtnSave}
           />
@@ -291,5 +381,9 @@ const styles = StyleSheet.create({
   },
   viewMapBtnCancell: {
     backgroundColor: "#a60d0d"
+  },
+  restAddBtn: {
+    backgroundColor: "#00a680",
+    margin: 20
   }
 });
