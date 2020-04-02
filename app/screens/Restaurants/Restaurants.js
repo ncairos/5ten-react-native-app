@@ -93,6 +93,7 @@ export default function Restaurants(props) {
         restaurants={restaurants}
         isLoading={isLoading}
         handleLoadMore={handleLoadMore}
+        navigation={navigation}
       />
       {user && (
         <AddRestaurantButton
@@ -111,7 +112,7 @@ function AddRestaurantButton(props) {
       buttonColor="#00a680"
       onPress={() =>
         //para para setIsReloadRest como prop al navigation se lo debo pasar por parametros
-        navigation.navigate("AddRestaurantScreen", { setIsReloadRest })
+        navigation.navigate("AddRestaurant", { setIsReloadRest })
       }
     />
   );
