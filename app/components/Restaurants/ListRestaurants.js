@@ -21,7 +21,10 @@ export default function ListRestaurants(props) {
           renderItem={restaurant => (
             <Restaurant restaurant={restaurant} navigation={navigation} />
           )}
-          keyExtractor={(item, idx) => idx.toString()}
+          // keyExtractor={item => item.id}
+          keyExtractor={(item, index) => {
+            index.toString();
+          }}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0}
           ListFooterComponent={<FooterList isLoading={isLoading} />}
@@ -55,7 +58,11 @@ function Restaurant(props) {
 
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate("DetailsRestaurant", { restaurant: restaurant.item.restaurant })}
+      onPress={() =>
+        navigation.navigate("DetailsRestaurant", {
+          restaurant: restaurant.item.restaurant
+        })
+      }
     >
       <View style={styles.viewRest}>
         <View style={styles.viewImg}>

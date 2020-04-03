@@ -15,6 +15,7 @@
     "expo-location": "~8.0.0",
     "expo-permissions": "^8.0.0",
     "firebase": "^7.8.1",
+    "firesql": "^2.0.2",
     "lodash": "^4.17.15",
     "react": "~16.9.0",
     "react-codemod": "^5.2.0",
@@ -37,6 +38,7 @@
     "react-navigation": "^4.1.1",
     "react-navigation-stack": "^2.1.1",
     "react-navigation-tabs": "^2.7.0",
+    "use-debounce": "^3.4.1",
     "uuid": "^7.0.2"
   },
   "devDependencies": {

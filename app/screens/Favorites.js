@@ -87,6 +87,7 @@ export default function Favorites(props) {
           data={restaurants}
           renderItem={restaurant => (
             <Restaurant
+              key={restaurant.toString()}
               restaurant={restaurant}
               navigation={navigation}
               toastRef={toastRef}
@@ -94,8 +95,9 @@ export default function Favorites(props) {
               setReloadRest={setReloadRest}
             />
           )}
-          keyExtractor={(item, idx) => {
-            idx.toString();
+          // keyExtractor={item => item.id}
+          keyExtractor={(item, index) => {
+            index.toString();
           }}
         />
       ) : (
@@ -120,6 +122,8 @@ function Restaurant(props) {
   } = props;
   const { id, name, images } = restaurant.item;
   const [imgRest, setImgRest] = useState(null);
+
+  const imgUri = imgRest != null ? imgRest : "";
 
   useEffect(() => {
     const image = images[0];
@@ -187,7 +191,7 @@ function Restaurant(props) {
       >
         <Image
           resizeMode="cover"
-          source={{ uri: imgRest }}
+          source={imgUri.length != 0 ? { uri: imgUri } : null}
           style={styles.image}
           PlaceholderContent={<ActivityIndicator color="#fff" />}
         />

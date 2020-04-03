@@ -84,8 +84,9 @@ export default function ListReviews(props) {
         renderItem={review => (
           <Review
             review={review}
-            keyExtractor={(item, idx) => {
-              idx.toString();
+            // keyExtractor={item => item.id}
+            keyExtractor={(item, index) => {
+              index.toString();
             }}
           />
         )}
